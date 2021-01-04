@@ -13,7 +13,29 @@ module.exports = function (passport) {
       },
       // passport callback function
       async (accessToken, refreshToken, profile, done) => {
-        console.log(profile);
+        const newUser = {
+          profileId: profile.id,
+          displayName: profile.displayName,
+          firstName: profile.name.givenName,
+          lastName: profile.name.familyName,
+          image: profile.photos[0].value,
+        };
+
+        try {
+          // find user in database
+          let user = await User.findOne({ profileId: profile.id });
+
+          if (!user) {
+            // if this user not exist create new user
+            user = await User.create(newUser);
+            done(null, user);
+          } else {
+            // otherwise send this user
+            done(null, user);
+          }
+        } catch (err) {
+          console.log(err);
+        }
       }
     )
   );
