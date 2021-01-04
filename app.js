@@ -3,10 +3,15 @@ const path = require('path');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const exphbs = require('express-handlebars');
+const passport = require('passport');
+const session = require('express-session');
 const connectDB = require('./config/db');
 
 // load config
 dotenv.config({ path: './config/config.env' });
+
+// Passport config
+require('./config/passport')(passport);
 
 // connect with database
 connectDB();
@@ -19,12 +24,25 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// set static folder
-app.use(express.static(path.join(__dirname, 'public')));
-
 // set app engine
 app.engine('.hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
 app.set('view engine', '.hbs');
+
+// Sessions
+app.use(
+  session({
+    secret: '',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // set app routes
 app.use('/', require('./routes/index'));
