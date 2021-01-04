@@ -31,7 +31,7 @@ app.set('view engine', '.hbs');
 // Sessions
 app.use(
   session({
-    secret: '',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
@@ -46,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // set app routes
 app.use('/', require('./routes/index'));
+app.use('/auth', require('./routes/auth'));
 
 // set server port
 const PORT = process.env.PORT || 3000;
