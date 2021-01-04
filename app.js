@@ -26,6 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('.hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
 app.set('view engine', '.hbs');
 
+// set app routes
+app.use('/', require('./routes/index'));
+
 // set server port
 const PORT = process.env.PORT || 3000;
 app.listen(
