@@ -10,7 +10,8 @@ router.get('/', ensureGuest, (req, res) => {
 // @desc Dashboard
 // @route GET /dashboard
 router.get('/dashboard', ensureAuth, (req, res) => {
-  res.render('dashboard', { name: req.user.firstName });
+  let name = !req.user ? 'Guest' : req.user.firstName;
+  res.render('dashboard', { name });
 });
 
 module.exports = router;
