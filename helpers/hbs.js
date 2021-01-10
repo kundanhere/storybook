@@ -20,7 +20,7 @@ module.exports = {
   stripTags: (input) => input.replace(/<(?:.|\n)*?>/gm, ''),
 
   // display card edit icon conditionally
-  editIcon: function (storyUser, loggedUser, storyId, floating = true) {
+  editIcon: (storyUser, loggedUser, storyId, floating = true) => {
     if (storyUser._id.toString() == loggedUser._id.toString()) {
       return !floating
         ? `<a href="/stories/edit/${storyId}"><i class="fas fa-edit fa-small"></i></a>`
@@ -28,5 +28,19 @@ module.exports = {
     } else {
       return '';
     }
+  },
+
+  //  help to select opton
+  select: (selected, options) => {
+    return options
+      .fn(this)
+      .replace(
+        new RegExp(' value="' + selected + '"'),
+        '$& selected="selected"'
+      )
+      .replace(
+        new RegExp('>' + selected + '</option>'),
+        ' selected="selected"$&'
+      );
   },
 };
