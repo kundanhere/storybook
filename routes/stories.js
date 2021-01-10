@@ -110,4 +110,25 @@ router.get('/:id', ensureAuth, async (req, res) => {
   }
 });
 
+// @desc Show user stories
+// @route GET /stories/user/:userId
+router.get('/user/:userId', ensureAuth, async (req, res) => {
+  try {
+    let stories = await Story.find({
+      user: req.params.userId,
+      status: 'public',
+    })
+      .populate('user')
+      .lean();
+
+    if (!stories) {
+      return res.render('errors/404');
+    }
+    res.render('stories/index', { stories });
+  } catch (err) {
+    console.error(err);
+    res.render('errors/500');
+  }
+});
+
 module.exports = router;
