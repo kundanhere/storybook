@@ -1,10 +1,11 @@
 const moment = require('moment');
 
 module.exports = {
-  formatDate: function (date, format) {
-    return moment(date).format(format);
-  },
-  truncate: function (str, len) {
+  // format date time
+  formatDate: (date, format) => moment(date).format(format),
+
+  // strip string to given length
+  truncate: (str, len) => {
     if (str.length > len && str.length > 0) {
       let new_str = str + ' ';
       new_str = str.substr(0, len);
@@ -14,7 +15,18 @@ module.exports = {
     }
     return str;
   },
-  stripTags: function (input) {
-    return input.replace(/<(?:.|\n)*?>/gm, '');
+
+  // remove html tags from string
+  stripTags: (input) => input.replace(/<(?:.|\n)*?>/gm, ''),
+
+  // display card edit icon conditionally
+  editIcon: function (storyUser, loggedUser, storyId, floating = true) {
+    if (storyUser._id.toString() == loggedUser._id.toString()) {
+      return !floating
+        ? `<a href="/stories/edit/${storyId}"><i class="fas fa-edit fa-small"></i></a>`
+        : `<a href="/stories/edit/${storyId}" class="btn btn-floating halfway-fab blue"><i class="fas fa-edit fa-small"></i></a>`;
+    } else {
+      return '';
+    }
   },
 };
